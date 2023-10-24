@@ -67,16 +67,19 @@ class HpEnvyApi
 
         sleep(5);
 
-        $filename = $this->generateScanFilename();
+        $response = $this->client->request('GET', $locationUrl);
 
-        $urlFileHandle = fopen($locationUrl, 'r');
-        if ($urlFileHandle === false) {
-            throw new \RuntimeException('Could not open scanned document stream');
+        if (200 !== $response->getStatusCode()) {
+            throw new \Exception('...');
         }
 
+        $filename = $this->generateScanFilename();
+        $fileHandler = fopen($filename, 'w');
+
         $this->logger->debug('Started streaming scanned file', ['filename' => $filename]);
-        file_put_contents($filename, stream_get_contents($urlFileHandle));
-        fclose($urlFileHandle);
+        foreach ($this->client->stream($response) as $chunk) {
+            fwrite($fileHandler, $chunk->getContent());
+        }
         $this->logger->debug('Finished streaming scanned file', ['filename' => $filename]);
 
         return $filename;
