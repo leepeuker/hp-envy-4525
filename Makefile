@@ -2,6 +2,7 @@
 
 include .env
 include .env.local
+export
 
 # Container management
 ######################

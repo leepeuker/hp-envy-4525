@@ -21,7 +21,7 @@ class Controller extends AbstractController
     {
         $file = $this->hpEnvyApi->scanRequest();
 
-        $target = '/paperless-consumption/' . basename($file);
+        $target = '/scans-finished/' . basename($file);
 
         $this->logger->debug('Move scanned file to target directory', ['targetFile' => $target]);
         rename($file, $target);
