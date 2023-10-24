@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -66,19 +67,24 @@ class HpEnvyApi
 
         sleep(5);
 
-        $filename = $this->projectVarDir . 'scan-' . microtime() . '.pdf';
+        $filename = $this->generateScanFilename();
 
-        $resource = fopen($locationUrl, 'r');
-        if ($resource === false) {
+        $urlFileHandle = fopen($locationUrl, 'r');
+        if ($urlFileHandle === false) {
             throw new \RuntimeException('Could not open scanned document stream');
         }
 
         $this->logger->debug('Started streaming scanned file', ['filename' => $filename]);
-        file_put_contents($filename, stream_get_contents($resource));
-        fclose($resource);
+        file_put_contents($filename, stream_get_contents($urlFileHandle));
+        fclose($urlFileHandle);
         $this->logger->debug('Finished streaming scanned file', ['filename' => $filename]);
 
         return $filename;
+    }
+
+    private function generateScanFilename() : string
+    {
+        return $this->projectVarDir . 'scan-' . date(DateTimeInterface::ATOM) . '.pdf';
     }
 
     private function ensureValidStatusCode(ResponseInterface $response) : void
