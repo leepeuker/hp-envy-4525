@@ -5,3 +5,6 @@ RUN apk add --no-cache make nano
 RUN mkdir -p /paperless-consumption && chown -R application /paperless-consumption
 USER application
 WORKDIR /app
+
+FROM development AS production
+RUN composer install --no-dev
