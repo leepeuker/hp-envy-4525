@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    HP Envy 4525
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="/css/dashboard.css" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/dashboard.js"></script>
+{% endblock %}
+
+{% block body %}
+    <main role="main" class="container">
+        <div class="d-grid gap-2">
+            <br>
+            <button class="btn btn-lg btn-primary" type="button" style="font-size: 4rem;font-weight: bold" id="scanButton">Scan</button>
+        </div>
+    </main>
+{% endblock %}

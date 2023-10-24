@@ -1,0 +1,14 @@
+version: "3.5"
+
+services:
+  app_production:
+    build:
+      context: ./
+      dockerfile: ./build/php/Dockerfile
+      target: production
+    user: "${USER_ID}:${USER_ID}"
+    ports:
+      - "8080:80"
+
+volumes:
+  movary-storage:

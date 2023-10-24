@@ -28,4 +28,10 @@ class Controller extends AbstractController
 
         return new Response('Done');
     }
+
+    #[Route('/')]
+    public function dashboard() : Response
+    {
+        return $this->render('dashboard.html.twig');
+    }
 }

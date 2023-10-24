@@ -1,6 +1,7 @@
 .PHONY:build
 
 include .env
+include .env.local
 
 # Container management
 ######################
