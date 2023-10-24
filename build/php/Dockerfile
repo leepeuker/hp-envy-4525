@@ -7,4 +7,5 @@ USER application
 WORKDIR /app
 
 FROM development AS production
+COPY --chown=application ./ ./
 RUN composer install --no-dev
