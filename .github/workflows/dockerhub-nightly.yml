@@ -26,4 +26,4 @@ jobs:
           file: build/php/Dockerfile
           target: production
           push: true
-          tags: leepeuker/hpEnvy4525:nightly
+          tags: leepeuker/hp-envy-4525:nightly
