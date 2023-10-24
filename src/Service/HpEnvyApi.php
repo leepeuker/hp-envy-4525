@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -21,7 +20,7 @@ class HpEnvyApi
     public function __construct(
         private readonly HttpClientInterface $client,
         private readonly LoggerInterface $logger,
-        private readonly string $tmpDirectory,
+        private readonly string $projectVarDir,
     ) {
     }
 
@@ -62,19 +61,22 @@ class HpEnvyApi
             throw new \RuntimeException('Missing location header in response');
         }
 
-        $this->logger->debug('Successfully started scan', ['locationUrl' => $headers['location'][0]]);
+        $locationUrl = $headers['location'][0] . '/NextDocument';
+        $this->logger->debug('Successfully started scan', ['locationUrl' => $locationUrl]);
 
         sleep(5);
 
-        $filename = $this->tmpDirectory . '/test.pdf';
+        $filename = $this->projectVarDir . 'scan-' . microtime() . '.pdf';
 
-        $resource = fopen($headers['location'][0] . '/NextDocument', 'r');
+        $resource = fopen($locationUrl, 'r');
         if ($resource === false) {
             throw new \RuntimeException('Could not open scanned document stream');
         }
 
+        $this->logger->debug('Started streaming scanned file', ['filename' => $filename]);
         file_put_contents($filename, stream_get_contents($resource));
         fclose($resource);
+        $this->logger->debug('Finished streaming scanned file', ['filename' => $filename]);
 
         return $filename;
     }
