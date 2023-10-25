@@ -11,9 +11,10 @@ async function scan() {
     hideAlert()
 
     const format = document.getElementById('formatInput').value
+    const scanTarget = document.getElementById('scanTargetInput').value
 
     try {
-        const response = await fetch('/scan?format=' + format, {
+        const response = await fetch('/scan?format=' + format + '&target=' + scanTarget, {
             signal: AbortSignal.timeout(60000)
         })
 

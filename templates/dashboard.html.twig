@@ -24,8 +24,10 @@
             </div>
             <div class="input-group mb-3" style="margin-bottom: .5rem!important;">
                 <label class="input-group-text" for="inputGroupSelect01">Target</label>
-                <select class="form-select form-select-lg" aria-label="Format" id="formatInput">
-                    <option value="default" selected>default</option>
+                <select class="form-select form-select-lg" aria-label="Format" id="scanTargetInput">
+                    {% for scanTarget in scanTargets %}
+                        <option value="{{ loop.index }}" {% if loop.first %}selected{% endif %}>{{ scanTarget }}</option>
+                    {% endfor %}
                 </select>
             </div>
 

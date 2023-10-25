@@ -14,26 +14,33 @@ class Controller extends AbstractController
     public function __construct(
         private readonly HpEnvyApi $hpEnvyApi,
         private readonly LoggerInterface $logger,
+        private readonly array $scanTargets,
     ) {
+    }
+
+    #[Route('/')]
+    public function dashboard() : Response
+    {
+        return $this->render('dashboard.html.twig', ['scanTargets' => $this->scanTargets]);
     }
 
     #[Route('/scan')]
     public function scan(Request $request) : Response
     {
         $fileFormat = $request->query->get('format', 'pdf');
+        $scanTarget = $request->query->get('target', 'paperless');
         $file = $this->hpEnvyApi->scanRequest($fileFormat);
 
-        $target = '/scans-finished/' . basename($file);
+        $target = '/scans-finished/' . $this->scanTargets[$scanTarget - 1] . '/' . basename($file);
 
         $this->logger->debug('Move scanned file to target directory', ['targetFile' => $target]);
+
+        if (file_exists(dirname($target)) === false) {
+            mkdir(dirname($target), 0777, true);
+        }
+
         rename($file, $target);
 
         return new Response('Done');
-    }
-
-    #[Route('/')]
-    public function dashboard() : Response
-    {
-        return $this->render('dashboard.html.twig');
     }
 }

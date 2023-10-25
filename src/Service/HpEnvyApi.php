@@ -94,16 +94,16 @@ class HpEnvyApi
         return $filename;
     }
 
-    private function generateScanFilename() : string
-    {
-        return $this->projectVarDir . 'scan-' . date(DateTimeInterface::ATOM) . '.pdf';
-    }
-
     private function ensureValidStatusCode(ResponseInterface $response) : void
     {
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 201) {
             throw new \RuntimeException('Invalid response status code: ' . $statusCode);
         }
+    }
+
+    private function generateScanFilename() : string
+    {
+        return $this->projectVarDir . 'scan-' . date(DateTimeInterface::ATOM) . '.pdf';
     }
 }
