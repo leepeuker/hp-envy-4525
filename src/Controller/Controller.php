@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\HpEnvyApi;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,9 +18,10 @@ class Controller extends AbstractController
     }
 
     #[Route('/scan')]
-    public function scan() : Response
+    public function scan(Request $request) : Response
     {
-        $file = $this->hpEnvyApi->scanRequest();
+        $fileFormat = $request->query->get('format', 'pdf');
+        $file = $this->hpEnvyApi->scanRequest($fileFormat);
 
         $target = '/scans-finished/' . basename($file);
 

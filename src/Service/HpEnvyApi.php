@@ -25,8 +25,17 @@ class HpEnvyApi
     ) {
     }
 
-    public function scanRequest() : string
+    public function scanRequest(string $fileFormat) : string
     {
+        $scanIntent = match ($fileFormat) {
+            'pdf' => 'Document',
+            'jpeg' => 'Photo',
+        };
+        $scanCompressionFactor = match ($fileFormat) {
+            'pdf' => '15',
+            'jpeg' => '25',
+        };
+
         $response = $this->client->request(
             'POST',
             'http://printer.home/eSCL/ScanJobs', [
@@ -34,7 +43,7 @@ class HpEnvyApi
             'body' => '<scan:ScanSettings xmlns:scan="http://schemas.hp.com/imaging/escl/2011/05/03"
                            xmlns:pwg="http://www.pwg.org/schemas/2010/12/sm">
                         <pwg:Version>2.1</pwg:Version>
-                        <scan:Intent>Document</scan:Intent>
+                        <scan:Intent>' . $scanIntent . '</scan:Intent>
                         <pwg:ScanRegions>
                             <pwg:ScanRegion>
                                 <pwg:Height>3507</pwg:Height>
@@ -48,7 +57,7 @@ class HpEnvyApi
                         <scan:XResolution>300</scan:XResolution>
                         <scan:YResolution>300</scan:YResolution>
                         <scan:ColorMode>RGB24</scan:ColorMode>
-                        <scan:CompressionFactor>15</scan:CompressionFactor>
+                        <scan:CompressionFactor>' . $scanCompressionFactor . '</scan:CompressionFactor>
                         <scan:Brightness>1000</scan:Brightness>
                         <scan:Contrast>1000</scan:Contrast>
                     </scan:ScanSettings>',
