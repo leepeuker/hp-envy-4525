@@ -1,6 +1,5 @@
-var staticDevCoffee = 'movary';
+var staticDevCoffee = 'hpEnvy4525';
 var assets = [
-  '/',
   '/index.php',
 ];
 
@@ -21,3 +20,7 @@ self.addEventListener("fetch", fetchEvent => {
     })
   )
 })
+caches.keys().then(function(names) {
+    for (let name of names)
+        caches.delete(name);
+});
